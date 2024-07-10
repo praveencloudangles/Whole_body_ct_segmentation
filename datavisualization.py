@@ -20,18 +20,19 @@ def open_random_gz_files(path):
     
 def convert_and_save_gz_to_jpg(gz_file, output_path):
     img = nib.load(gz_file)
-    print("img-------------", img)
     data = img.get_fdata()
-    
-    middle_slices = [
-        data[data.shape[0] // 2, :, :],
-        data[:, data.shape[1] // 2, :],
-        data[:, :, data.shape[2] // 2]
-    ]
-    
-    combined_image = np.hstack(middle_slices)
+
+    slice_1 = data[data.shape[0] // 2, :, :]
+    slice_2 = data[:, data.shape[1] // 2, :]
+    slice_3 = data[:, :, data.shape[2] // 2]
+
+    min_size = min(slice_1.shape[0], slice_2.shape[0], slice_3.shape[0])
+    slice_1 = slice_1[:min_size, :]
+    slice_2 = slice_2[:min_size, :]
+    slice_3 = slice_3[:min_size, :]
+    combined_image = np.hstack([slice_1, slice_2, slice_3])
+
     fig = go.Figure(data=go.Heatmap(z=combined_image, colorscale='Gray'))
-    
     fig.update_layout(height=600, width=1800)
     fig.write_image(output_path)
     
