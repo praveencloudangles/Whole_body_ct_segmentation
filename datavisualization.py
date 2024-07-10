@@ -32,7 +32,7 @@ def convert_and_save_gz_to_jpg(gz_file, output_path):
     combined_image = np.hstack(middle_slices)
     fig = go.Figure(data=go.Heatmap(z=combined_image, colorscale='Gray'))
     
-    fig.update_layout(title_text='Scan Array (Middle Slices)', height=600, width=1800)
+    fig.update_layout(height=1000, width=1800)
     fig.write_image(output_path)
     
     
